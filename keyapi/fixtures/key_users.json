@@ -1,0 +1,11 @@
+[
+    {
+        "model": "keyapi.keyuser",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "institution": 1,
+            "field": 1
+        }
+    }
+]

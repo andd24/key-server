@@ -1,0 +1,9 @@
+[
+    {
+        "model": "keyapi.question",
+        "pk": 1,
+        "fields": {
+            "question": "Question?"
+        }
+    }
+]

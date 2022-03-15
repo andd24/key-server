@@ -1,0 +1,11 @@
+[
+    {
+        "model": "keyapi.interviewquestion",
+        "pk": 1,
+        "fields": {
+            "interview": 1,
+            "question": 1,
+            "answer": "I'm 29."
+        }
+    }
+]

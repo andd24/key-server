@@ -1,0 +1,17 @@
+[
+    {
+        "model": "keyapi.interview",
+        "pk": 1,
+        "fields": {
+            "project": 1,
+            "subject": "anonymous",
+            "location": "internet",
+            "scheduled_date": "2022-03-12",
+            "collection_date": "2022-03-12",
+            "notes": "NOTES",
+            "imgurl": "IMGLINK",
+            "complete": true,
+            "questions": [1]
+        }
+    }
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "model": "keyapi.institution",
+        "pk": 1,
+        "fields": {
+            "name": "Harvard University",
+            "description": "Harvard University is devoted to excellence in teaching, learning, and research, and to developing leaders who make a difference globally.",
+            "link": "https://www.harvard.edu/",
+            "imgurl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/1597px-Harvard_University_logo.svg.png?20200802104842"
+        }
+    }
+]

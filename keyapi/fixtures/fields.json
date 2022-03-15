@@ -1,0 +1,9 @@
+[
+    {
+        "model": "keyapi.field",
+        "pk": 1,
+        "fields": {
+            "label": "public health"
+        }
+    }
+]

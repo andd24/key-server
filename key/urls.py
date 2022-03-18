@@ -17,9 +17,14 @@ from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
-from keyapi.views import login_user, register_user
+from keyapi.views import login_user, register_user, KeyUserView, ProjectView, FieldView
+from keyapi.views.interview import InterviewView
 
 router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'users', KeyUserView, 'key user')
+router.register(r'projects', ProjectView, 'project')
+router.register(r'fields', FieldView, 'field')
+router.register(r'interviews', InterviewView, 'interview')
 
 urlpatterns = [
     path('register', register_user),

@@ -5,5 +5,12 @@
         "fields": {
             "label": "public health"
         }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 2,
+        "fields": {
+            "label": "other"
+        }
     }
 ]

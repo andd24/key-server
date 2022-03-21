@@ -18,13 +18,19 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 from keyapi.views import login_user, register_user, KeyUserView, ProjectView, FieldView
+from keyapi.views.institution import InstitutionView
 from keyapi.views.interview import InterviewView
+from keyapi.views.interview_question import InterviewQuestionView
+from keyapi.views.question import QuestionView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'users', KeyUserView, 'key user')
 router.register(r'projects', ProjectView, 'project')
 router.register(r'fields', FieldView, 'field')
 router.register(r'interviews', InterviewView, 'interview')
+router.register(r'questions', QuestionView, 'question')
+router.register(r'interviewquestions', InterviewQuestionView, 'interviewquestion')
+router.register(r'institutions', InstitutionView, 'institution')
 
 urlpatterns = [
     path('register', register_user),

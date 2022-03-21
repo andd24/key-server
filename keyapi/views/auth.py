@@ -61,18 +61,18 @@ def register_user(request):
     )
     
     # making image upload work
-    if request.data["profile_pic"] is not None:
-        format, imgstr = request.data["profile_pic"].split(';base64,')
-        ext = format.split('/')[-1]
-        data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["username"]}-{uuid.uuid4()}.{ext}')
-    else:
-        data = None
+    # if request.data["profile_pic"] is not None:
+    #     format, imgstr = request.data["profile_pic"].split(';base64,')
+    #     ext = format.split('/')[-1]
+    #     data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["username"]}-{uuid.uuid4()}.{ext}')
+    # else:
+    #     data = None
     
     # Save the data to the database with the save() method
     # Now save the extra info in the rareapi_rare_user table
     key_user = KeyUser.objects.create(
-        field=request.data['field'],
-        institution=request.data['institution'],
+        # field=request.data['field'],
+        # institution=request.data['institution'],
         user=new_user
         # profile_image_url=request.data['profile_image_url'],
         # profile_pic=data

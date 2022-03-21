@@ -6,9 +6,9 @@ class Interview(models.Model):
     subject = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     scheduled_date = models.DateField()
-    collection_date = models.DateField()
-    notes = models.TextField()
+    collection_date = models.DateField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
     # audiofile = 
-    imgurl = models.TextField()
+    imgurl = models.TextField(blank=True, null=True)
     complete = models.BooleanField(default=False)
     questions = models.ManyToManyField("Question", through="InterviewQuestion")

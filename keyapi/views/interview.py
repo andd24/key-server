@@ -8,6 +8,9 @@ from django.forms import ValidationError
 class InterviewView(ViewSet):
     def list(self, request):
         interviews = Interview.objects.all()
+        project = request.query_params.get('project_id', None)
+        if project is not None:
+            interviews = interviews.filter(project_id=project)
         serializer = InterviewSerializer(interviews, many=True)
         return Response(serializer.data)
 
@@ -27,14 +30,17 @@ class InterviewView(ViewSet):
             # format, imgstr = request.data["image_url"].split(';base64,')
             # ext = format.split('/')[-1]
             # imgdata = ContentFile(base64.b64decode(imgstr), name=f'{request.data["title"]}-{uuid.uuid4()}.{ext}')
-            serializer.save()
-            # if request.auth.user.is_staff == 1:
-            #     post = serializer.save(approved=True)
-            # post.tags.set(request.data["tags"])
+            interview = serializer.save()
+            interview.questions.set(request.data["questions"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except ValidationError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        
+    def destroy(self, request, pk):
+        interview = Interview.objects.get(pk=pk)
+        interview.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
         
 class InterviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,4 +51,4 @@ class InterviewSerializer(serializers.ModelSerializer):
 class CreateInterviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interview
-        fields = ['project', 'subject', 'location', 'scheduled_date']
+        fields = ['project', 'subject', 'location', 'scheduled_date', 'questions']

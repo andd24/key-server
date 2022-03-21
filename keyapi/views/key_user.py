@@ -1,6 +1,6 @@
-from datetime import datetime
 from django.contrib.auth.models import User
-from keyapi.models import KeyUser
+from django.forms import ValidationError
+from keyapi.models import KeyUser, Institution, Field
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,6 +9,9 @@ from rest_framework.viewsets import ViewSet
 class KeyUserView(ViewSet):
     def list(self, request):
         users = KeyUser.objects.all()
+        institution = request.query_params.get('institution_id', None)
+        if institution is not None:
+            users = users.filter(institution_id=institution)
         serializer = KeyUserSerializer(users, many=True)
         return Response(serializer.data)
 
@@ -28,12 +31,28 @@ class KeyUserView(ViewSet):
         serializer = KeyUserSerializer(key_user)
         return Response(serializer.data)
     
+    @action(methods=['put'], detail=True)
+    def link(self, request, pk):
+        user = KeyUser.objects.get(pk=pk)
+        user.institution = Institution.objects.get(pk=request.data)
+        user.save()
+
+        return Response({'message': 'User has been linked to institution'}, status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=['put'], detail=True)
+    def assign(self, request, pk):
+        user = KeyUser.objects.get(pk=pk)
+        user.field = Field.objects.get(pk=request.data)
+        user.save()
+
+        return Response({'message': 'User has added a field of study'}, status=status.HTTP_204_NO_CONTENT)
+    
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for user types
     """
     class Meta:
         model = User
-        depth = 1
+        depth = 2
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'date_joined']
 
 
@@ -43,3 +62,4 @@ class KeyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = KeyUser
         fields = ['id', 'user', 'institution', 'field']
+        depth = 3

@@ -21,21 +21,18 @@ class ProjectView(ViewSet):
 
     def list(self, request):
         projects = Project.objects.all()
-        # category = request.query_params.get('category_id', None)
         user = request.query_params.get('user_id', None)
-        # tag = request.query_params.get('tag_id', None)
         # title = request.query_params.get('q', None)
-        # approved = request.query_params.get('approved', None)
+        published = request.query_params.get('published', None)
+        unpublished = request.query_parans.get('unpublished', None)
         # if title is not None:
         #     posts = posts.filter(title__icontains=f"{title}")
-        # if category is not None:
-        #     posts = posts.filter(category_id=category)
         if user is not None:
             projects = projects.filter(user_id=user)
-        # if tag is not None:
-        #     posts = posts.filter(tags=tag)
-        # if approved is not None:
-        #     posts = posts.filter(approved=True)
+        if published is not None:
+            projects = projects.filter(public=True)
+        if unpublished is not None:
+            projects = projects.filter(public=False)
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
@@ -71,44 +68,20 @@ class ProjectView(ViewSet):
         project = Project.objects.get(pk=pk)
         project.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
-
-    # @action(methods=['get'], detail=False)
-    # def subscribed(self, request):
-    #     """Only get posts whose authors are associated with the current user's subscriptions"""
-
-    #     rare_user = RareUser.objects.get(pk=request.auth.user.id)
-
-    #     follower = RareUserSerializer(rare_user)
-
-    #     posts = Post.objects.filter(
-    #         user__pk__in=follower.data['following'])
-        
-    #     serializer = PostSerializer(posts, many=True)
-    #     return Response(serializer.data)
-        
-    # @action(methods=['put'], detail=True)
-    # def edit_tags(self, request, pk):
-    #     """Put request to is_staff"""
-
-    #     post = Post.objects.get(pk=pk)
-    #     post.tags.set(request.data)
-    #     post.save()
-
-    #     return Response({'message': 'Tags have been edited'}, status=status.HTTP_204_NO_CONTENT)
     
-    # @action(methods=['put'], detail=True)
-    # def approve(self, request, pk):
-    #     post = Post.objects.get(pk=pk)
-    #     post.approved = True
-    #     post.save()
-    #     return Response({'message': 'Post has been approved by admin'}, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['put'], detail=True)
+    def publish(self, request, pk):
+        project = Project.objects.get(pk=pk)
+        project.public = True
+        project.save()
+        return Response({'message': 'Project has been published'}, status=status.HTTP_204_NO_CONTENT)
     
-    # @action(methods=['put'], detail=True)
-    # def unapprove(self, request, pk):
-    #     post = Post.objects.get(pk=pk)
-    #     post.approved = False
-    #     post.save()
-    #     return Response({'message': 'Post has been unapproved by admin'}, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['put'], detail=True)
+    def unpublish(self, request, pk):
+        project = Project.objects.get(pk=pk)
+        project.public = False
+        project.save()
+        return Response({'message': 'Project has been unpublished'}, status=status.HTTP_204_NO_CONTENT)
 
 class ProjectSerializer(serializers.ModelSerializer):
     # event_count = serializers.IntegerField(default=None)

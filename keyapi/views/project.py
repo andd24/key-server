@@ -23,16 +23,15 @@ class ProjectView(ViewSet):
         projects = Project.objects.all()
         user = request.query_params.get('user_id', None)
         # title = request.query_params.get('q', None)
-        published = request.query_params.get('published', None)
-        unpublished = request.query_parans.get('unpublished', None)
+        public = request.query_params.get('public', None)
         # if title is not None:
         #     posts = posts.filter(title__icontains=f"{title}")
         if user is not None:
             projects = projects.filter(user_id=user)
-        if published is not None:
+        if public is not None:
             projects = projects.filter(public=True)
-        if unpublished is not None:
-            projects = projects.filter(public=False)
+        if user is not None and public is not None:
+            projects = projects.filter(user_id=user, public=True)
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
@@ -82,6 +81,13 @@ class ProjectView(ViewSet):
         project.public = False
         project.save()
         return Response({'message': 'Project has been unpublished'}, status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=['put'], detail=True)
+    def conclusions(self, request, pk):
+        project = Project.objects.get(pk=pk)
+        project.conclusions = request.data
+        project.save()
+        return Response({'message': 'Conclusions have been added'}, status=status.HTTP_204_NO_CONTENT)
 
 class ProjectSerializer(serializers.ModelSerializer):
     # event_count = serializers.IntegerField(default=None)

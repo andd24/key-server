@@ -8,7 +8,6 @@ class Interview(models.Model):
     scheduled_date = models.DateField()
     collection_date = models.DateField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
-    # audiofile = 
     imgurl = models.TextField(blank=True, null=True)
     complete = models.BooleanField(default=False)
     questions = models.ManyToManyField("Question", through="InterviewQuestion")

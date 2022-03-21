@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 from django.forms import ValidationError
 from keyapi.models import InterviewQuestion
 
@@ -46,12 +47,20 @@ class InterviewQuestionView(ViewSet):
         InterviewQuestions.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @action(methods=['put'], detail=True)
+    def answer(self, request, pk):
+        interviewquestion = InterviewQuestion.objects.get(pk=pk)
+        interviewquestion.answer = request.data
+        interviewquestion.save()
+        return Response({'message': 'Interview question has been answered'}, status=status.HTTP_204_NO_CONTENT)
+    
 class InterviewQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterviewQuestion
-        fields = ('id', 'user', 'interview', 'question')
+        fields = ('id', 'interview', 'question', 'answer')
+        depth = 2
 
 class CreateInterviewQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterviewQuestion
-        fields = ('user', 'interview', 'question')
+        fields = ('user', 'interview', 'question', 'answer')

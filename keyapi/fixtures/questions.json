@@ -3,6 +3,7 @@
         "model": "keyapi.question",
         "pk": 1,
         "fields": {
+            "project": 1,
             "question": "Question?"
         }
     }

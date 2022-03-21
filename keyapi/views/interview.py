@@ -1,3 +1,4 @@
+from datetime import datetime
 from keyapi.models import Interview
 from rest_framework import serializers, status
 from rest_framework.decorators import action
@@ -9,8 +10,13 @@ class InterviewView(ViewSet):
     def list(self, request):
         interviews = Interview.objects.all()
         project = request.query_params.get('project_id', None)
+        complete = request.query_params.get('complete', None)
         if project is not None:
             interviews = interviews.filter(project_id=project)
+        if complete is not None:
+            interviews = interviews.filter(complete=True)
+        if project is not None and complete is not None:
+            interviews = interviews.filter(project_id=project, complete=True)
         serializer = InterviewSerializer(interviews, many=True)
         return Response(serializer.data)
 
@@ -37,10 +43,29 @@ class InterviewView(ViewSet):
         except ValidationError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
         
+    def update(self, request, pk):
+        try:
+            interview = Interview.objects.get(pk=pk)
+            serializer = CreateInterviewSerializer(interview, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            updated_interview = serializer.save()
+            updated_interview.questions.set(request.data["questions"])
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        except ValidationError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        
     def destroy(self, request, pk):
         interview = Interview.objects.get(pk=pk)
         interview.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=['put'], detail=True)
+    def complete(self, request, pk):
+        interview = Interview.objects.get(pk=pk)
+        interview.complete = True
+        interview.collection_date = datetime.date
+        interview.save()
+        return Response({'message': 'Interview has been completed'}, status=status.HTTP_204_NO_CONTENT)
         
 class InterviewSerializer(serializers.ModelSerializer):
     class Meta:

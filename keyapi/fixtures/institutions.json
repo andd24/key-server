@@ -8,5 +8,15 @@
             "link": "https://www.harvard.edu/",
             "imgurl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/1597px-Harvard_University_logo.svg.png?20200802104842"
         }
+    },
+    {
+        "model": "keyapi.institution",
+        "pk": 2,
+        "fields": {
+            "name": "Columbia University",
+            "description": "Columbia University is one of the world's most important centers of research and at the same time a distinctive and distinguished learning environment for undergraduates and graduate students in many scholarly and professional fields. ",
+            "link": "https://www.columbia.edu/",
+            "imgurl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Columbia_University_shield.svg/640px-Columbia_University_shield.svg.png"
+        }
     }
 ]

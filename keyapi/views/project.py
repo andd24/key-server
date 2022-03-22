@@ -22,10 +22,13 @@ class ProjectView(ViewSet):
     def list(self, request):
         projects = Project.objects.all()
         user = request.query_params.get('user_id', None)
-        # title = request.query_params.get('q', None)
+        title = request.query_params.get('q', None)
         public = request.query_params.get('public', None)
-        # if title is not None:
-        #     posts = posts.filter(title__icontains=f"{title}")
+        field = request.query_params.get('field', None)
+        if title is not None and public is not None:
+            projects = projects.filter(title__icontains=f"{title}", public=True)
+        if field is not None and public is not None:
+            projects = projects.filter(field_id=field, public=True)
         if user is not None:
             projects = projects.filter(user_id=user)
         if public is not None:

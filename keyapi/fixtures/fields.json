@@ -10,7 +10,57 @@
         "model": "keyapi.field",
         "pk": 2,
         "fields": {
+            "label": "urban planning"
+        }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 3,
+        "fields": {
+            "label": "sociology"
+        }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 4,
+        "fields": {
+            "label": "economics"
+        }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 5,
+        "fields": {
+            "label": "political science"
+        }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 6,
+        "fields": {
+            "label": "social justice"
+        }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 7,
+        "fields": {
+            "label": "education"
+        }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 8,
+        "fields": {
+            "label": "environment"
+        }
+    },
+    {
+        "model": "keyapi.field",
+        "pk": 9,
+        "fields": {
             "label": "other"
         }
     }
+
 ]

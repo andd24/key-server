@@ -9,8 +9,11 @@ class QuestionView(ViewSet):
     def list(self, request):
         questions = Question.objects.all()
         search = request.query_params.get('q', None)
+        project = request.query_params.get('project_id', None)
         if search is not None:
-            questions = questions.filter(question__icontains=f"{search}")
+            questions = questions.filter(question__icontains=f"{search}", project=project)
+        if project is not None:
+            questions = questions.filter(project_id=project)
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 

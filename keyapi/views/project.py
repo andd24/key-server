@@ -24,7 +24,7 @@ class ProjectView(ViewSet):
         user = request.query_params.get('user_id', None)
         title = request.query_params.get('q', None)
         public = request.query_params.get('public', None)
-        field = request.query_params.get('field', None)
+        field = request.query_params.get('field_id', None)
         if title is not None and public is not None:
             projects = projects.filter(title__icontains=f"{title}", public=True)
         if field is not None and public is not None:
@@ -47,9 +47,6 @@ class ProjectView(ViewSet):
             # ext = format.split('/')[-1]
             # imgdata = ContentFile(base64.b64decode(imgstr), name=f'{request.data["title"]}-{uuid.uuid4()}.{ext}')
             serializer.save(user=user)
-            # if request.auth.user.is_staff == 1:
-            #     post = serializer.save(approved=True)
-            # post.tags.set(request.data["tags"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except ValidationError as ex:
@@ -60,8 +57,7 @@ class ProjectView(ViewSet):
             project = Project.objects.get(pk=pk)
             serializer = CreateProjectSerializer(project, data=request.data)
             serializer.is_valid(raise_exception=True)
-            # updated_project = serializer.save()
-            # updated_post.tags.set(request.data["tags"])
+            serializer.save()
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         except ValidationError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -103,4 +99,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 class CreateProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['title', 'description', 'imgurl', 'field']
+        fields = ['title', 'description', 'imgurl', 'field', 'conclusions']

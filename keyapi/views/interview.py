@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from keyapi.models import Interview
 from rest_framework import serializers, status
 from rest_framework.decorators import action
@@ -11,12 +11,15 @@ class InterviewView(ViewSet):
         interviews = Interview.objects.all()
         project = request.query_params.get('project_id', None)
         complete = request.query_params.get('complete', None)
+        planned = request.query_params.get('planned', None)
         if project is not None:
             interviews = interviews.filter(project_id=project)
         if complete is not None:
             interviews = interviews.filter(complete=True)
         if project is not None and complete is not None:
             interviews = interviews.filter(project_id=project, complete=True)
+        if project is not None and planned is not None:
+            interviews = interviews.filter(project_id=project, complete=False)
         serializer = InterviewSerializer(interviews, many=True)
         return Response(serializer.data)
 
@@ -63,17 +66,24 @@ class InterviewView(ViewSet):
     def complete(self, request, pk):
         interview = Interview.objects.get(pk=pk)
         interview.complete = True
-        interview.collection_date = datetime.date
+        interview.collection_date = date.today()
         interview.save()
         return Response({'message': 'Interview has been completed'}, status=status.HTTP_204_NO_CONTENT)
-        
+    
+    @action(methods=['put'], detail=True)
+    def note(self, request, pk):
+        interview = Interview.objects.get(pk=pk)
+        interview.notes = request.data
+        interview.save()
+        return Response({'message': 'Notes have been added'}, status=status.HTTP_204_NO_CONTENT)      
+      
 class InterviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interview
         fields = '__all__'
-        depth = 2
+        depth = 3
         
 class CreateInterviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interview
-        fields = ['project', 'subject', 'location', 'scheduled_date', 'questions']
+        fields = ['project', 'subject', 'location', 'scheduled_date', 'questions', 'notes']

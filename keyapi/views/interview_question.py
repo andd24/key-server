@@ -10,6 +10,12 @@ class InterviewQuestionView(ViewSet):
     def list (self, request):
         """handles the GET all for InterviewQuestions"""
         interview_questions = InterviewQuestion.objects.all()
+        interview = request.query_params.get('interview_id', None)
+        search = request.query_params.get('q', None)
+        if search is not None:
+            interview_questions = interview_questions.filter(question__icontains=f"{search}", interview_id=interview)
+        if interview is not None:
+            interview_questions = interview_questions.filter(interview_id=interview)
         serializer = InterviewQuestionSerializer(interview_questions, many=True)
         return Response(serializer.data)
 
